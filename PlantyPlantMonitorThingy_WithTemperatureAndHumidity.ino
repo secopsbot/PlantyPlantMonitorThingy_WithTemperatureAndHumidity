@@ -10,8 +10,8 @@
 
 int idDHT11pin = 2; //Digital pin for comunications
 int idDHT11intNumber = 0; //interrupt number (must be the one that use the previus defined pin (see table above)
-int led13 = 13;
-int mostureSensor = 0;
+int led13 = 13; //Pin13 (onboard LED) used for testing
+int mostureSensor = 0; //Analog Pin 0
 
 //declaration
 void dht11_wrapper(); // must be declared before the lib initialization
@@ -37,7 +37,7 @@ void loop()
   int sensorValue = analogRead(mostureSensor);
   
   Serial.println(sensorValue);
-  
+  //Current check will light up the led when the humidity rises >= 900 but less than 1000(>1000 is rather dry)
   if (sensorValue >= 1000)
    {
     digitalWrite(led13, LOW);
