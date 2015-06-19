@@ -8,7 +8,7 @@
 
 #include <idDHT11.h>
 
-int idDHT11pin = 2; //Digital pin for comunications
+int idDHT11pin = 2; //Digital pin for communicating with Temperature/Humidity Device.
 int idDHT11intNumber = 0; //interrupt number (must be the one that use the previus defined pin (see table above)
 int led13 = 13; //Pin13 (onboard LED) used for testing
 int mostureSensor = 0; //Analog Pin 0
@@ -27,7 +27,7 @@ void setup()
   pinMode(led13, OUTPUT);
 }
 // This wrapper is in charge of calling 
-// mus be defined like this for the lib work
+// must be defined like this for the lib work
 void dht11_wrapper() {
   DHT11.isrCallback();
 }
@@ -37,16 +37,28 @@ void loop()
   int sensorValue = analogRead(mostureSensor);
   
   Serial.println(sensorValue);
-  //Current check will light up the led when the humidity rises >= 900 but less than 1000(>1000 is rather dry)
-  if (sensorValue >= 1000)
+  //Check the sensor value and perform an action when in threshold <400 = WET | >=400 <=700 OK | >700 dryish | >900 probably dead 
+  if (sensorValue > 900)
    {
-    digitalWrite(led13, LOW);
-   }
-  else if (sensorValue >= 900 && sensorValue < 1000)
-   {
+    //Blink RED
     digitalWrite(led13, HIGH);
    }
-
+  else if (sensorValue <= 900 && sensorValue > 700)
+   {
+    //Solid RED
+    digitalWrite(led13, HIGH);
+   }
+  else if (sensorValue >= 400 && sensorValue <= 700)
+   {
+    //Solid GREEN
+    digitalWrite(led13, HIGH);
+   }
+  else if (sensorValue < 400)
+   {
+    //Solid BLUE
+    digitalWrite(led13, HIGH);
+   }
+   
   delay(1000);        // delay 1 second between reads
   
   Serial.print("\nRetrieving information from sensor: ");
